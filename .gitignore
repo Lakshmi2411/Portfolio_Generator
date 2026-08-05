@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.env
+venv/
+.vscode/
+*.log
+ai-env/
+test_files/
