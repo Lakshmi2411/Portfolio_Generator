@@ -29,7 +29,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-GEMINI_API_URL_TEMPLATE = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+GEMINI_API_URL_TEMPLATE = (
+    "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+)
 
 DEFAULT_GROQ_MODEL = "llama-3.3-70b-versatile"
 DEFAULT_GEMINI_MODEL = "gemini-2.0-flash"
@@ -44,12 +46,14 @@ class LLMError(Exception):
 
 class RateLimitError(LLMError):
     """A per-minute (or otherwise short) rate limit — worth retrying."""
+
     pass
 
 
 class QuotaExhaustedError(LLMError):
     """A per-day (or otherwise long-window) quota limit — retrying won't help
     within a normal session; better to fail over to another provider."""
+
     pass
 
 
@@ -73,8 +77,13 @@ def _is_daily_quota_error(error_text: str) -> bool:
 
 
 class LLMClient:
-    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None,
-                 provider: Optional[str] = None, _is_fallback: bool = False):
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        model: Optional[str] = None,
+        provider: Optional[str] = None,
+        _is_fallback: bool = False,
+    ):
         # Supports the same MODEL=provider/model-name convention used elsewhere
         # (e.g. MODEL=gemini/gemini-3.1-flash-lite, MODEL=groq/llama-3.3-70b-versatile).
         # If MODEL is set in .env, it takes precedence over LLM_PROVIDER + defaults.
@@ -104,7 +113,9 @@ class LLMClient:
                     "as GEMINI_API_KEY=..."
                 )
         else:
-            raise LLMError(f"Unknown provider '{self.provider}'. Use 'groq' or 'gemini'.")
+            raise LLMError(
+                f"Unknown provider '{self.provider}'. Use 'groq' or 'gemini'."
+            )
 
         # Build a fallback client for the OTHER provider, if its key is available.
         # Only built once per client (not recursively) to avoid ping-ponging forever
@@ -114,13 +125,24 @@ class LLMClient:
             other_provider = "gemini" if self.provider == "groq" else "groq"
             other_key = self.gemini_key if other_provider == "gemini" else self.groq_key
             if other_key:
-                self._fallback_client = LLMClient(provider=other_provider, _is_fallback=True)
+                self._fallback_client = LLMClient(
+                    provider=other_provider, _is_fallback=True
+                )
 
     # ---------- provider-specific calls ----------
 
-    def _call_groq(self, system_prompt: str, user_prompt: str,
-                    temperature: float, json_mode: bool, max_tokens: int) -> str:
-        headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
+    def _call_groq(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+        temperature: float,
+        json_mode: bool,
+        max_tokens: int,
+    ) -> str:
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
         payload = {
             "model": self.model,
             "messages": [
@@ -144,8 +166,14 @@ class LLMClient:
 
         return resp.json()["choices"][0]["message"]["content"]
 
-    def _call_gemini(self, system_prompt: str, user_prompt: str,
-                      temperature: float, json_mode: bool, max_tokens: int) -> str:
+    def _call_gemini(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+        temperature: float,
+        json_mode: bool,
+        max_tokens: int,
+    ) -> str:
         url = GEMINI_API_URL_TEMPLATE.format(model=self.model)
         payload = {
             "system_instruction": {"parts": [{"text": system_prompt}]},
@@ -158,7 +186,9 @@ class LLMClient:
         if json_mode:
             payload["generationConfig"]["response_mime_type"] = "application/json"
 
-        resp = requests.post(url, params={"key": self.api_key}, json=payload, timeout=60)
+        resp = requests.post(
+            url, params={"key": self.api_key}, json=payload, timeout=60
+        )
 
         if resp.status_code == 429:
             if _is_daily_quota_error(resp.text):
@@ -171,20 +201,37 @@ class LLMClient:
         try:
             return data["candidates"][0]["content"]["parts"][0]["text"]
         except (KeyError, IndexError):
-            raise LLMError(f"Unexpected Gemini response shape: {json.dumps(data)[:500]}")
+            raise LLMError(
+                f"Unexpected Gemini response shape: {json.dumps(data)[:500]}"
+            )
 
-    def _call_provider(self, system_prompt: str, user_prompt: str,
-                        temperature: float, json_mode: bool, max_tokens: int) -> str:
+    def _call_provider(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+        temperature: float,
+        json_mode: bool,
+        max_tokens: int,
+    ) -> str:
         if self.provider == "groq":
-            return self._call_groq(system_prompt, user_prompt, temperature, json_mode, max_tokens)
+            return self._call_groq(
+                system_prompt, user_prompt, temperature, json_mode, max_tokens
+            )
         else:
-            return self._call_gemini(system_prompt, user_prompt, temperature, json_mode, max_tokens)
+            return self._call_gemini(
+                system_prompt, user_prompt, temperature, json_mode, max_tokens
+            )
 
     # ---------- public interface ----------
 
-    def chat(self, system_prompt: str, user_prompt: str,
-              temperature: float = 0.3, json_mode: bool = False,
-              max_tokens: int = 4096) -> str:
+    def chat(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+        temperature: float = 0.3,
+        json_mode: bool = False,
+        max_tokens: int = 4096,
+    ) -> str:
         """
         Single-turn chat completion. Retries on ordinary rate limits with
         backoff; on a daily-quota exhaustion, or after retries are used up,
@@ -194,26 +241,40 @@ class LLMClient:
 
         for attempt in range(MAX_RETRIES):
             try:
-                return self._call_provider(system_prompt, user_prompt, temperature, json_mode, max_tokens)
+                return self._call_provider(
+                    system_prompt, user_prompt, temperature, json_mode, max_tokens
+                )
             except QuotaExhaustedError as e:
                 last_error = e
-                print(f"  {self.provider} daily quota exhausted — retrying won't help within this session.")
+                print(
+                    f"  {self.provider} daily quota exhausted — retrying won't help within this session."
+                )
                 break  # skip remaining retries, go straight to fallback below
             except RateLimitError as e:
                 last_error = e
-                wait = _parse_retry_after_seconds(str(e), default=BASE_BACKOFF_SECONDS * (2 ** attempt))
+                wait = _parse_retry_after_seconds(
+                    str(e), default=BASE_BACKOFF_SECONDS * (2**attempt)
+                )
                 wait = min(wait, 60) + 0.5  # small buffer, cap at 60s
-                print(f"  Rate limited ({self.provider}), waiting {wait:.1f}s before retry "
-                      f"({attempt + 1}/{MAX_RETRIES})...")
+                print(
+                    f"  Rate limited ({self.provider}), waiting {wait:.1f}s before retry "
+                    f"({attempt + 1}/{MAX_RETRIES})..."
+                )
                 time.sleep(wait)
 
         # Primary provider exhausted (either daily quota, or ran out of retries).
         if self._fallback_client is not None:
-            print(f"  Switching to {self._fallback_client.provider} as fallback provider...")
+            print(
+                f"  Switching to {self._fallback_client.provider} as fallback provider..."
+            )
             try:
-                return self._fallback_client.chat(system_prompt, user_prompt,
-                                                    temperature=temperature, json_mode=json_mode,
-                                                    max_tokens=max_tokens)
+                return self._fallback_client.chat(
+                    system_prompt,
+                    user_prompt,
+                    temperature=temperature,
+                    json_mode=json_mode,
+                    max_tokens=max_tokens,
+                )
             except LLMError as fallback_error:
                 raise LLMError(
                     f"Both providers failed. {self.provider}: {last_error} | "
@@ -226,17 +287,29 @@ class LLMClient:
             f"Last error: {last_error}"
         )
 
-    def chat_json(self, system_prompt: str, user_prompt: str,
-                   temperature: float = 0.3, max_tokens: int = 4096) -> dict:
+    def chat_json(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+        temperature: float = 0.3,
+        max_tokens: int = 4096,
+    ) -> dict:
         """
         Chat completion that returns parsed JSON. Handles the common failure
         mode where the model wraps its JSON in ```json fences despite being
         told not to.
         """
-        raw = self.chat(system_prompt, user_prompt, temperature=temperature,
-                         json_mode=True, max_tokens=max_tokens)
+        raw = self.chat(
+            system_prompt,
+            user_prompt,
+            temperature=temperature,
+            json_mode=True,
+            max_tokens=max_tokens,
+        )
         cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw.strip())
         try:
             return json.loads(cleaned)
         except json.JSONDecodeError as e:
-            raise LLMError(f"Model did not return valid JSON: {e}\nRaw output: {raw[:500]}")
+            raise LLMError(
+                f"Model did not return valid JSON: {e}\nRaw output: {raw[:500]}"
+            )

@@ -6,3 +6,5 @@ venv/
 *.log
 ai-env/
 test_files/
+*.json
+*.html

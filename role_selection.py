@@ -28,9 +28,10 @@ from typing import Optional
 
 from llm_client import LLMClient, LLMError
 
-
-README_EXCERPT_LEN = 300  # kept short deliberately — with 20-30 repos in one prompt, full
-                            # READMEs would blow through free-tier per-minute token limits fast
+README_EXCERPT_LEN = (
+    300  # kept short deliberately — with 20-30 repos in one prompt, full
+)
+# READMEs would blow through free-tier per-minute token limits fast
 
 
 def load_profile_data(path: str) -> dict:
@@ -107,7 +108,9 @@ def present_rankings_and_select(rankings: list, all_repo_names: set) -> list:
         print(f"        {r.get('reason', '')}")
 
     # Default suggestion: anything scoring 60+
-    suggested_indices = [i for i, r in enumerate(rankings, 1) if r.get("relevance_score", 0) >= 60]
+    suggested_indices = [
+        i for i, r in enumerate(rankings, 1) if r.get("relevance_score", 0) >= 60
+    ]
     suggested_str = ",".join(str(i) for i in suggested_indices)
 
     print(f"\nSuggested selection (score >= 60): {suggested_str or '(none)'}")
@@ -154,6 +157,7 @@ Return a JSON object with this exact shape:
   ]
 }}"""
 
+
 def find_literal_keyword_matches(gap_label: str, all_repo_briefs: list) -> list:
     """
     Deterministic pre-check, independent of the LLM: for common gap categories
@@ -170,18 +174,54 @@ def find_literal_keyword_matches(gap_label: str, all_repo_briefs: list) -> list:
     (and the user still confirms) the final call.
     """
     CATEGORY_SYNONYMS = [
-        {"triggers": ["collaborat", "team"],
-         "keywords": ["team", "teams", "collab", "group project", "group work",
-                       "pair program", "hackathon", "co-founder", "contributors"]},
-        {"triggers": ["test", " ci", "ci/cd", "continuous integration"],
-         "keywords": ["test", "tests", "testing", "pytest", "unittest", "ci/cd",
-                       "continuous integration", "github actions", "coverage"]},
-        {"triggers": ["deploy", "live demo", "live "],
-         "keywords": ["deploy", "deployed", "live demo", "hosted", "vercel", "heroku",
-                       "streamlit cloud", "github pages", "render.com", "railway",
-                       "production", "www.", "http://", "https://"]},
-        {"triggers": ["document"],
-         "keywords": ["documentation", "docs", "wiki"]},
+        {
+            "triggers": ["collaborat", "team"],
+            "keywords": [
+                "team",
+                "teams",
+                "collab",
+                "group project",
+                "group work",
+                "pair program",
+                "hackathon",
+                "co-founder",
+                "contributors",
+            ],
+        },
+        {
+            "triggers": ["test", " ci", "ci/cd", "continuous integration"],
+            "keywords": [
+                "test",
+                "tests",
+                "testing",
+                "pytest",
+                "unittest",
+                "ci/cd",
+                "continuous integration",
+                "github actions",
+                "coverage",
+            ],
+        },
+        {
+            "triggers": ["deploy", "live demo", "live "],
+            "keywords": [
+                "deploy",
+                "deployed",
+                "live demo",
+                "hosted",
+                "vercel",
+                "heroku",
+                "streamlit cloud",
+                "github pages",
+                "render.com",
+                "railway",
+                "production",
+                "www.",
+                "http://",
+                "https://",
+            ],
+        },
+        {"triggers": ["document"], "keywords": ["documentation", "docs", "wiki"]},
     ]
 
     gap_lower = gap_label.lower()
@@ -193,13 +233,26 @@ def find_literal_keyword_matches(gap_label: str, all_repo_briefs: list) -> list:
 
     # Fallback: also include raw significant words straight from the gap label,
     # so gap types outside the taxonomy above still get some deterministic coverage.
-    STOPWORDS = {"no", "a", "an", "the", "of", "or", "and", "project", "sized", "focused"}
+    STOPWORDS = {
+        "no",
+        "a",
+        "an",
+        "the",
+        "of",
+        "or",
+        "and",
+        "project",
+        "sized",
+        "focused",
+    }
     words = re.findall(r"[a-zA-Z]+", gap_lower)
     search_terms.update(w for w in words if w not in STOPWORDS and len(w) > 3)
 
     matches = []
     for brief in all_repo_briefs:
-        haystack = f"{brief.get('description', '')} {brief.get('readme_excerpt', '')}".lower()
+        haystack = (
+            f"{brief.get('description', '')} {brief.get('readme_excerpt', '')}".lower()
+        )
         hit_terms = [term for term in search_terms if term in haystack]
         if hit_terms:
             matches.append({"name": brief["name"], "matched_keywords": hit_terms})
@@ -263,8 +316,9 @@ def rescan_for_gap_fit(client: LLMClient, gap: dict, all_repo_briefs: list) -> d
     return client.chat_json(RESCAN_SYSTEM_PROMPT, prompt, temperature=0.0)
 
 
-def run_gap_analysis_with_confirmation(client: LLMClient, roles: list,
-                                         selected_names: list, all_repo_briefs: list) -> tuple:
+def run_gap_analysis_with_confirmation(
+    client: LLMClient, roles: list, selected_names: list, all_repo_briefs: list
+) -> tuple:
     """
     Returns (final_selected_names, gap_added_names, unresolved_gaps).
     gap_added_names tracks which repos were added specifically because they filled
@@ -310,7 +364,9 @@ def run_gap_analysis_with_confirmation(client: LLMClient, roles: list,
             print(f"  ('{candidate}' is already in your selection.)")
             continue
 
-        answer = input(f"  Add '{candidate}' to your selection? (y/n): ").strip().lower()
+        answer = (
+            input(f"  Add '{candidate}' to your selection? (y/n): ").strip().lower()
+        )
         if answer == "y":
             selected_names.append(candidate)
             gap_added_names.append(candidate)
@@ -321,8 +377,9 @@ def run_gap_analysis_with_confirmation(client: LLMClient, roles: list,
     return selected_names, gap_added_names, unresolved_gaps
 
 
-def compute_featured_repos(selected_names: list, gap_added_names: list,
-                             rankings: list, max_featured: int = 10) -> list:
+def compute_featured_repos(
+    selected_names: list, gap_added_names: list, rankings: list, max_featured: int = 10
+) -> list:
     """
     Hard-caps the portfolio display list at max_featured repos. Gap-fill additions
     get guaranteed priority (they were added to fix a specific identified weakness —
@@ -346,6 +403,7 @@ def compute_featured_repos(selected_names: list, gap_added_names: list,
 
 # ---------- Step 6 (new): work experience not reflected on GitHub ----------
 
+
 def ask_work_experience() -> list:
     """
     GitHub only shows public/open-source work — a person's strongest, most
@@ -360,7 +418,9 @@ def ask_work_experience() -> list:
     print("Work experience (optional)")
     print("=" * 70)
     print("GitHub only shows public projects — if you have relevant work experience")
-    print("that isn't reflected there, you can add it here to strengthen your portfolio.")
+    print(
+        "that isn't reflected there, you can add it here to strengthen your portfolio."
+    )
 
     answer = input("Do you want to add any work experience? (y/n): ").strip().lower()
     if answer != "y":
@@ -381,13 +441,15 @@ def ask_work_experience() -> list:
         print("(press Enter to skip):")
         jd = input("> ").strip()
 
-        jobs.append({
-            "company": company,
-            "title": title,
-            "duration": duration,
-            "description": description,
-            "job_description": jd or None,
-        })
+        jobs.append(
+            {
+                "company": company,
+                "title": title,
+                "duration": duration,
+                "description": description,
+                "job_description": jd or None,
+            }
+        )
 
         more = input("\nAdd another job? (y/n): ").strip().lower()
         if more != "y":
@@ -418,18 +480,23 @@ Return a JSON object with this exact shape:
 Only include gaps that are genuinely addressed — do not force a match."""
 
 
-def check_work_experience_against_gaps(client: LLMClient, unresolved_gaps: list, jobs: list) -> list:
+def check_work_experience_against_gaps(
+    client: LLMClient, unresolved_gaps: list, jobs: list
+) -> list:
     if not unresolved_gaps or not jobs:
         return []
     prompt = WORK_EXPERIENCE_GAP_CHECK_USER_PROMPT_TEMPLATE.format(
         gaps_json=json.dumps(unresolved_gaps, indent=2),
         jobs_json=json.dumps(jobs, indent=2),
     )
-    result = client.chat_json(WORK_EXPERIENCE_GAP_CHECK_SYSTEM_PROMPT, prompt, temperature=0.0)
+    result = client.chat_json(
+        WORK_EXPERIENCE_GAP_CHECK_SYSTEM_PROMPT, prompt, temperature=0.0
+    )
     return result.get("resolved_gaps", [])
 
 
 # ---------- orchestration ----------
+
 
 def run_phase2(profile_json_path: str, output_path: str = "phase2_output.json"):
     data = load_profile_data(profile_json_path)
@@ -446,25 +513,34 @@ def run_phase2(profile_json_path: str, output_path: str = "phase2_output.json"):
     rankings = rank_repos_for_roles(client, roles, repo_briefs)
 
     selected_names = present_rankings_and_select(rankings, all_repo_names)
-    print(f"\nSelected repos: {', '.join(selected_names) if selected_names else '(none)'}")
+    print(
+        f"\nSelected repos: {', '.join(selected_names) if selected_names else '(none)'}"
+    )
 
-    selected_names, gap_added_names, unresolved_gaps = run_gap_analysis_with_confirmation(
-        client, roles, selected_names, repo_briefs)
+    selected_names, gap_added_names, unresolved_gaps = (
+        run_gap_analysis_with_confirmation(client, roles, selected_names, repo_briefs)
+    )
 
-    featured_repo_names = compute_featured_repos(selected_names, gap_added_names, rankings, max_featured=10)
+    featured_repo_names = compute_featured_repos(
+        selected_names, gap_added_names, rankings, max_featured=10
+    )
 
     work_experience = ask_work_experience()
 
     resolved_by_experience = []
     if work_experience and unresolved_gaps:
         print("\nChecking whether your work experience addresses the remaining gaps...")
-        resolved_by_experience = check_work_experience_against_gaps(client, unresolved_gaps, work_experience)
+        resolved_by_experience = check_work_experience_against_gaps(
+            client, unresolved_gaps, work_experience
+        )
         for r in resolved_by_experience:
-            print(f"  '{r['gap']}' is addressed by your experience at {r['resolved_by']}: {r['explanation']}")
+            print(
+                f"  '{r['gap']}' is addressed by your experience at {r['resolved_by']}: {r['explanation']}"
+            )
 
     result = {
         "roles": roles,
-        "selected_repo_names": selected_names,       # full working set — everything the user approved
+        "selected_repo_names": selected_names,  # full working set — everything the user approved
         "featured_repo_names": featured_repo_names,  # hard-capped top 10 for the actual portfolio page
         "gap_added_names": gap_added_names,
         "unresolved_gaps": unresolved_gaps,
@@ -477,17 +553,25 @@ def run_phase2(profile_json_path: str, output_path: str = "phase2_output.json"):
 
     print(f"\nSaved Phase 2 output to {output_path}")
     print(f"Full selection ({len(selected_names)}): {', '.join(selected_names)}")
-    print(f"Featured for portfolio ({len(featured_repo_names)}): {', '.join(featured_repo_names)}")
+    print(
+        f"Featured for portfolio ({len(featured_repo_names)}): {', '.join(featured_repo_names)}"
+    )
     if len(selected_names) > len(featured_repo_names):
         dropped = [n for n in selected_names if n not in featured_repo_names]
-        print(f"Not featured (still in your full selection, just not top 10): {', '.join(dropped)}")
+        print(
+            f"Not featured (still in your full selection, just not top 10): {', '.join(dropped)}"
+        )
     if work_experience:
         print(f"Work experience entries: {len(work_experience)}")
     return result
 
 
 if __name__ == "__main__":
-    profile_path = sys.argv[1] if len(sys.argv) > 1 else input("Path to Phase 1 JSON file: ").strip()
+    profile_path = (
+        sys.argv[1]
+        if len(sys.argv) > 1
+        else input("Path to Phase 1 JSON file: ").strip()
+    )
     try:
         run_phase2(profile_path)
     except LLMError as e:
