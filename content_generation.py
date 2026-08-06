@@ -113,14 +113,18 @@ def generate_project_descriptions(
 BIO_SYSTEM_PROMPT = """You are an expert technical resume/portfolio writer.
 
 CRITICAL GROUNDING RULE: only reference facts explicitly present in the data you're given —
-existing bio text, work experience (company, title, description), project names, and aggregated
-technology names. NEVER invent employers, job titles, dates, years of experience, metrics, or
-achievements not stated in the provided data. If work experience has no duration given, don't
-guess one or state a number of years — omit timeframes entirely rather than fabricate them.
+existing bio text, work experience (company, title, description), education, certifications,
+awards, publications, additional named skills, project names, and aggregated technology names.
+NEVER invent employers, job titles, dates, degrees, certifications, awards, years of experience,
+metrics, or achievements not stated in the provided data. If work experience has no duration
+given, don't guess one or state a number of years — omit timeframes entirely rather than
+fabricate them.
 
 Write a 3-5 sentence professional bio that:
 - Opens with who they are professionally, framed toward the target role(s)
 - Weaves in real work experience (company/title, and what they actually did, if provided)
+- Mentions certifications, education, or awards ONLY if they're genuinely relevant and provided —
+  don't force them in if they don't add to the narrative
 - References the genuine breadth of technology shown by their project portfolio (use the
   aggregated technology list given, don't invent items not in it)
 - Sounds like a confident, natural bio a person would put on their own portfolio — not a
@@ -134,6 +138,20 @@ Existing self-written bio (may be empty): {existing_bio}
 
 Work experience (JSON array, may be empty):
 {work_experience_json}
+
+Certifications (JSON array, may be empty):
+{certifications_json}
+
+Education (JSON array, may be empty):
+{education_json}
+
+Awards (JSON array, may be empty):
+{awards_json}
+
+Publications (JSON array, may be empty):
+{publications_json}
+
+Additional named skills (may be empty): {additional_skills}
 
 Technologies demonstrated across featured projects and work experience (aggregated, deduped):
 {aggregated_tech_json}
@@ -154,11 +172,21 @@ def generate_bio(
     work_experience: list,
     aggregated_tech: list,
     project_names: list,
+    certifications: Optional[list] = None,
+    education: Optional[list] = None,
+    awards: Optional[list] = None,
+    publications: Optional[list] = None,
+    additional_skills: Optional[list] = None,
 ) -> dict:
     prompt = BIO_USER_PROMPT_TEMPLATE.format(
         roles=", ".join(roles),
         existing_bio=profile_bio or "(none provided)",
         work_experience_json=json.dumps(work_experience, indent=2),
+        certifications_json=json.dumps(certifications or [], indent=2),
+        education_json=json.dumps(education or [], indent=2),
+        awards_json=json.dumps(awards or [], indent=2),
+        publications_json=json.dumps(publications or [], indent=2),
+        additional_skills=", ".join(additional_skills or []) or "(none)",
         aggregated_tech_json=json.dumps(aggregated_tech, indent=2),
         project_names=", ".join(project_names),
     )
@@ -174,6 +202,16 @@ def build_skills_summary(repo_scans: list, work_experience_stack: list) -> dict:
     call. There's no judgment required here (it's just "what real, distinctive
     tech showed up across everything"), so keeping it deterministic removes
     any chance of the summary drifting from the actual evidence.
+
+    Always includes a "Languages" category aggregated from each repo's
+    GitHub-reported languages, independent of whether any dependency-manifest
+    tech was detected. This matters a lot for portfolios outside the
+    Python/AI world Phase 3's TECH_DICTIONARY was originally built around —
+    a person whose repos are plain HTML/CSS/JS or Android/Java projects with
+    no recognized package-manager tech would otherwise get a completely
+    empty skills section, which undersells them for no good reason. GitHub
+    always reports languages, so this is a reliable floor for anyone with
+    real repo activity.
     """
     by_category = {}
 
@@ -184,6 +222,8 @@ def build_skills_summary(repo_scans: list, work_experience_stack: list) -> dict:
         for tech in scan.get("detected_stack", []):
             if not tech.get("environment_wide"):
                 add(tech["name"], tech["category"])
+        for lang in scan.get("languages", []):
+            add(lang, "Languages")
 
     for job in work_experience_stack:
         for tech in job.get("detected_stack", []):
@@ -211,6 +251,11 @@ def run_phase4(
     roles = phase2_data["roles"]
     featured_names = phase2_data["featured_repo_names"]
     work_experience = phase2_data.get("work_experience") or []
+    certifications = phase2_data.get("certifications") or []
+    education = phase2_data.get("education") or []
+    awards = phase2_data.get("awards") or []
+    publications = phase2_data.get("publications") or []
+    additional_skills = phase2_data.get("additional_skills") or []
 
     repos_by_name = {r["name"]: r for r in phase1_data["repos"]}
     tech_scans_by_name = {r["name"]: r for r in phase3_data["repos"]}
@@ -249,6 +294,11 @@ def run_phase4(
         work_experience,
         aggregated_tech_flat,
         featured_names,
+        certifications=certifications,
+        education=education,
+        awards=awards,
+        publications=publications,
+        additional_skills=additional_skills,
     )
     print(f"  Bio: {bio_result.get('bio', '')[:100]}...")
     print(f"  Title: {bio_result.get('suggested_title', '')}")
@@ -259,6 +309,14 @@ def run_phase4(
         "suggested_title": bio_result.get("suggested_title", ""),
         "project_descriptions": descriptions,
         "skills_summary": aggregated_skills,
+        # Pass-through, not LLM-generated — these are already human-confirmed
+        # facts from Phase 2, so Phase 5 renders them directly with no
+        # additional risk of drift from what was actually provided.
+        "certifications": certifications,
+        "education": education,
+        "awards": awards,
+        "publications": publications,
+        "additional_skills": additional_skills,
     }
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2)

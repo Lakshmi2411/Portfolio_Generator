@@ -51,12 +51,14 @@ TECH_DICTIONARY = {
     "semantic-kernel": ("Semantic Kernel", "LLM Orchestration"),
     "instructor": ("Instructor", "LLM Orchestration"),
     "mcp": ("Model Context Protocol (MCP)", "LLM Orchestration"),
+
     # LLM providers / SDKs
     "openai": ("OpenAI API", "LLM Provider"),
     "groq": ("Groq API", "LLM Provider"),
     "google-generativeai": ("Gemini API", "LLM Provider"),
     "anthropic": ("Anthropic API", "LLM Provider"),
     "cohere": ("Cohere API", "LLM Provider"),
+
     # Vector search / retrieval
     "chromadb": ("ChromaDB", "Vector Database"),
     "faiss-cpu": ("FAISS", "Vector Search"),
@@ -66,12 +68,14 @@ TECH_DICTIONARY = {
     "qdrant-client": ("Qdrant", "Vector Database"),
     "rank-bm25": ("BM25", "Sparse/Keyword Retrieval"),
     "rank_bm25": ("BM25", "Sparse/Keyword Retrieval"),
+
     # Embeddings / NLP
     "sentence-transformers": ("Sentence Transformers", "Embeddings"),
     "transformers": ("Hugging Face Transformers", "NLP/ML"),
     "tokenizers": ("Hugging Face Tokenizers", "NLP/ML"),
     "spacy": ("spaCy", "NLP"),
     "nltk": ("NLTK", "NLP"),
+
     # Classic ML / data science
     "scikit-learn": ("scikit-learn", "Machine Learning"),
     "torch": ("PyTorch", "Deep Learning"),
@@ -82,11 +86,13 @@ TECH_DICTIONARY = {
     "pandas": ("Pandas", "Data Analysis"),
     "numpy": ("NumPy", "Data Analysis"),
     "scipy": ("SciPy", "Data Analysis"),
+
     # Data visualization
     "matplotlib": ("Matplotlib", "Data Visualization"),
     "seaborn": ("Seaborn", "Data Visualization"),
     "plotly": ("Plotly", "Data Visualization"),
     "altair": ("Altair", "Data Visualization"),
+
     # Web frameworks / APIs
     "fastapi": ("FastAPI", "Web Framework"),
     "flask": ("Flask", "Web Framework"),
@@ -94,19 +100,23 @@ TECH_DICTIONARY = {
     "starlette": ("Starlette", "Web Framework"),
     "uvicorn": ("Uvicorn (ASGI)", "Web Framework"),
     "gunicorn": ("Gunicorn", "Web Framework"),
+
     # Cloud / infra
     "boto3": ("AWS SDK (boto3)", "Cloud/AWS"),
     "botocore": ("AWS SDK (boto3)", "Cloud/AWS"),
+
     # Databases
     "sqlalchemy": ("SQLAlchemy", "Database"),
     "psycopg2": ("PostgreSQL (psycopg2)", "Database"),
     "pymongo": ("MongoDB (pymongo)", "Database"),
     "redis": ("Redis", "Database"),
+
     # Testing
     "pytest": ("pytest", "Testing"),
     "unittest2": ("unittest", "Testing"),
     "tox": ("tox", "Testing"),
     "coverage": ("Coverage.py", "Testing"),
+
     # Document processing
     "pypdf": ("pypdf", "Document Processing"),
     "pymupdf": ("PyMuPDF", "Document Processing"),
@@ -114,19 +124,57 @@ TECH_DICTIONARY = {
     "python-docx": ("python-docx", "Document Processing"),
     "openpyxl": ("openpyxl", "Document Processing"),
     "python-pptx": ("python-pptx", "Document Processing"),
+
     # Search tools
     "tavily-python": ("Tavily Search API", "Web Search Tool"),
     "duckduckgo-search": ("DuckDuckGo Search", "Web Search Tool"),
     "duckduckgo_search": ("DuckDuckGo Search", "Web Search Tool"),
+
     # UI / apps
     "streamlit": ("Streamlit", "App Framework"),
     "gradio": ("Gradio", "App Framework"),
+
     # JS/frontend (from package.json)
     "react": ("React", "Frontend"),
     "next": ("Next.js", "Frontend"),
     "vue": ("Vue.js", "Frontend"),
+    "angular": ("Angular", "Frontend"),
+    "svelte": ("Svelte", "Frontend"),
+    "jquery": ("jQuery", "Frontend"),
+    "bootstrap": ("Bootstrap", "Frontend"),
+    "tailwindcss": ("Tailwind CSS", "Frontend"),
     "express": ("Express", "Backend (Node)"),
+    "nestjs": ("NestJS", "Backend (Node)"),
     "axios": ("Axios", "HTTP Client"),
+    "webpack": ("Webpack", "Build Tooling"),
+    "vite": ("Vite", "Build Tooling"),
+    "typescript": ("TypeScript", "Language Tooling"),
+    "jest": ("Jest", "Testing"),
+    "mocha": ("Mocha", "Testing"),
+    "cypress": ("Cypress", "Testing"),
+
+    # Android / Java (from build.gradle / pom.xml)
+    "androidx.core:core-ktx": ("AndroidX Core", "Android"),
+    "androidx.appcompat:appcompat": ("AndroidX AppCompat", "Android"),
+    "com.google.android.material:material": ("Material Components (Android)", "Android"),
+    "androidx.constraintlayout:constraintlayout": ("ConstraintLayout", "Android"),
+    "androidx.lifecycle": ("Android Lifecycle Components", "Android"),
+    "androidx.room:room-runtime": ("Room (Android)", "Database"),
+    "com.squareup.retrofit2:retrofit": ("Retrofit", "Networking"),
+    "com.squareup.okhttp3:okhttp": ("OkHttp", "Networking"),
+    "com.squareup.picasso:picasso": ("Picasso", "Image Loading"),
+    "com.github.bumptech.glide:glide": ("Glide", "Image Loading"),
+    "com.google.dagger:dagger": ("Dagger", "Dependency Injection"),
+    "com.google.dagger:hilt-android": ("Hilt", "Dependency Injection"),
+    "io.reactivex.rxjava2:rxjava": ("RxJava", "Reactive Programming"),
+    "com.google.firebase:firebase": ("Firebase", "Backend/Cloud"),
+    "com.google.code.gson:gson": ("Gson", "Serialization"),
+    "com.fasterxml.jackson": ("Jackson", "Serialization"),
+    "org.springframework": ("Spring Framework", "Backend (Java)"),
+    "org.springframework.boot": ("Spring Boot", "Backend (Java)"),
+    "junit:junit": ("JUnit", "Testing"),
+    "org.mockito": ("Mockito", "Testing"),
+    "androidx.test.espresso": ("Espresso", "Testing"),
 }
 
 
@@ -160,10 +208,7 @@ PROSE_TECH_DICTIONARY = {
     "ci/cd": ("CI/CD Pipelines", "DevOps"),
     "github actions": ("GitHub Actions", "DevOps"),
     "jenkins": ("Jenkins", "DevOps"),
-    "unit test": ("Unit Testing", "Testing"),
-    "integration test": ("Integration Testing", "Testing"),
     "bdd": ("BDD Testing", "Testing"),
-    "test coverage": ("Test Coverage", "Testing"),
     "code review": ("Code Review Practices", "Engineering Practice"),
     "distributed system": ("Distributed Systems", "System Design"),
     "concurrency": ("Concurrency Control", "System Design"),
@@ -173,6 +218,58 @@ PROSE_TECH_DICTIONARY = {
     "cross-account": ("Cross-Account AWS Access", "Cloud/AWS"),
     "devops": ("DevOps Collaboration", "DevOps"),
     "monitoring": ("Production Monitoring", "Operations"),
+
+    # Data engineering / Big Data (Azure-heavy, since this is common in QA/data-quality resumes)
+    "pyspark": ("PySpark", "Data Engineering"),
+    "apache spark": ("Apache Spark", "Data Engineering"),
+    "databricks": ("Databricks", "Data Engineering"),
+    "delta lake": ("Delta Lake", "Data Engineering"),
+    "unity catalog": ("Databricks Unity Catalog", "Data Engineering"),
+    "azure data factory": ("Azure Data Factory", "Cloud/Azure"),
+    "azure synapse": ("Azure Synapse Analytics", "Cloud/Azure"),
+    "synapse analytics": ("Azure Synapse Analytics", "Cloud/Azure"),
+    "azure data lake": ("Azure Data Lake", "Cloud/Azure"),
+    "microsoft fabric": ("Microsoft Fabric", "Cloud/Azure"),
+    "azure function": ("Azure Functions", "Cloud/Azure"),
+    "star schema": ("Star Schema Design", "Data Modeling"),
+    "snowflake schema": ("Snowflake Schema Design", "Data Modeling"),
+    "data warehouse": ("Data Warehousing", "Data Engineering"),
+    "etl": ("ETL Development", "Data Engineering"),
+    "informatica": ("Informatica PowerCenter", "Data Engineering"),
+
+    # Data quality / QA / testing (specific tools, not just generic "testing")
+    "great expectations": ("Great Expectations", "Data Quality"),
+    "pytest": ("pytest", "Testing"),
+    "selenium": ("Selenium", "Testing"),
+    "big data testing": ("Big Data Testing", "Testing"),
+    "root cause analysis": ("Root Cause Analysis", "Engineering Practice"),
+    "rca": ("Root Cause Analysis", "Engineering Practice"),
+    "reconciliation": ("Data Reconciliation", "Data Quality"),
+    "data validation": ("Data Validation", "Data Quality"),
+    "data governance": ("Data Governance", "Data Quality"),
+    "data lineage": ("Data Lineage", "Data Quality"),
+
+    # ML / model validation
+    "mlflow": ("MLflow", "ML Ops"),
+    "model validation": ("ML Model Validation", "ML Ops"),
+    "feature engineering": ("Feature Engineering", "Machine Learning"),
+    "one-hot encoding": ("One-Hot Encoding", "Machine Learning"),
+
+    # Databases
+    "mongodb": ("MongoDB", "Database"),
+    "oracle": ("Oracle Database", "Database"),
+    "pl/sql": ("PL/SQL", "Database"),
+    "nosql": ("NoSQL", "Database"),
+
+    # AI-assisted dev tools
+    "github copilot": ("GitHub Copilot", "AI-Assisted Development"),
+    "databricks genie": ("Databricks Genie", "AI-Assisted Development"),
+
+    # PM / collaboration tools
+    "jira": ("Jira", "Project Tooling"),
+    "azure devops": ("Azure DevOps", "DevOps"),
+    "power bi": ("Power BI", "Data Visualization"),
+    "postman": ("Postman", "API Tooling"),
 }
 
 
@@ -195,9 +292,7 @@ def scan_work_experience_text(jobs: list) -> list:
     """
     results = []
     for job in jobs:
-        text = (
-            f"{job.get('description', '')} {job.get('job_description') or ''}".lower()
-        )
+        text = f"{job.get('description', '')} {job.get('job_description') or ''}".lower()
         detected = []
         seen = set()
 
@@ -215,31 +310,29 @@ def scan_work_experience_text(jobs: list) -> list:
             add("AWS Lambda", "Cloud/AWS")
 
         # Co-occurrence: testing qualifiers sharing one "test/coverage" mention
-        # in a conjunctive list, rather than each repeating "test" individually
-        if re.search(r"\btest(ing)?\b", text) or "coverage" in text:
-            if "unit" in text:
+        # in a conjunctive list, rather than each repeating "test" individually.
+        # Uses \b word boundaries throughout — plain substring checks previously
+        # matched "unit" inside unrelated words like "Unity" (Catalog), a real
+        # false positive caught in testing against an actual resume.
+        if re.search(r"\btest(ing)?\b", text) or re.search(r"\bcoverage\b", text):
+            if re.search(r"\bunit\b", text):
                 add("Unit Testing", "Testing")
-            if "integration" in text:
+            if re.search(r"\bintegration\b", text):
                 add("Integration Testing", "Testing")
-            if "end-to-end" in text or "e2e" in text:
+            if "end-to-end" in text or re.search(r"\be2e\b", text):
                 add("End-to-End Testing", "Testing")
-            if "coverage" in text:
+            if re.search(r"\bcoverage\b", text):
                 add("Test Coverage", "Testing")
 
-        results.append(
-            {
-                "company": job.get("company"),
-                "title": job.get("title"),
-                "detected_stack": sorted(
-                    detected, key=lambda d: (d["category"], d["name"])
-                ),
-            }
-        )
+        results.append({
+            "company": job.get("company"),
+            "title": job.get("title"),
+            "detected_stack": sorted(detected, key=lambda d: (d["category"], d["name"])),
+        })
     return results
 
 
 # ---------- dependency file parsers ----------
-
 
 def parse_requirements_txt(content: str) -> set:
     """Extract package names from a requirements.txt (handles ==, >=, extras, etc.)."""
@@ -275,13 +368,11 @@ def parse_pyproject_toml(content: str) -> set:
     if tomllib is not None:
         try:
             data = tomllib.loads(content)
-            for dep in data.get("project", {}).get("dependencies") or []:
+            for dep in (data.get("project", {}).get("dependencies") or []):
                 match = re.match(r"^([A-Za-z0-9._-]+)", dep)
                 if match:
                     names.add(match.group(1).lower())
-            poetry_deps = (
-                data.get("tool", {}).get("poetry", {}).get("dependencies") or {}
-            )
+            poetry_deps = (data.get("tool", {}).get("poetry", {}).get("dependencies") or {})
             for pkg_name in poetry_deps.keys():
                 if pkg_name.lower() != "python":
                     names.add(pkg_name.lower())
@@ -290,10 +381,41 @@ def parse_pyproject_toml(content: str) -> set:
             pass  # fall through to regex fallback below
 
     # Regex fallback (covers most common formats without needing tomllib)
-    for match in re.finditer(
-        r'"([A-Za-z0-9._-]+)(?:\[[^\]]*\])?(?:[><=!~][^"]*)?"', content
-    ):
+    for match in re.finditer(r'"([A-Za-z0-9._-]+)(?:\[[^\]]*\])?(?:[><=!~][^"]*)?"', content):
         names.add(match.group(1).lower())
+    return names
+
+
+def parse_build_gradle(content: str) -> set:
+    """
+    Extract dependency coordinates from build.gradle / build.gradle.kts.
+    Matches lines like:
+      implementation 'androidx.core:core-ktx:1.9.0'
+      implementation("com.squareup.retrofit2:retrofit:2.9.0")
+      testImplementation "junit:junit:4.13.2"
+    Extracts the "group:artifact" portion (without version), which is what
+    TECH_DICTIONARY's Android/Java entries are keyed on.
+    """
+    names = set()
+    # Matches group:artifact[:version] inside quotes, version part optional/ignored
+    for match in re.finditer(r'["\']([a-zA-Z0-9_.\-]+:[a-zA-Z0-9_.\-]+)(?::[^"\']*)?["\']', content):
+        names.add(match.group(1).lower())
+    return names
+
+
+def parse_pom_xml(content: str) -> set:
+    """
+    Extract dependency coordinates from a Maven pom.xml. Matches
+    <groupId>...</groupId> and <artifactId>...</artifactId> pairs inside
+    each <dependency> block, combined into the same "group:artifact" form
+    build.gradle parsing produces, so both hit the same dictionary keys.
+    """
+    names = set()
+    for dep_block in re.findall(r"<dependency>(.*?)</dependency>", content, re.DOTALL):
+        group_match = re.search(r"<groupId>([^<]+)</groupId>", dep_block)
+        artifact_match = re.search(r"<artifactId>([^<]+)</artifactId>", dep_block)
+        if group_match and artifact_match:
+            names.add(f"{group_match.group(1).strip()}:{artifact_match.group(1).strip()}".lower())
     return names
 
 
@@ -302,6 +424,8 @@ DEPENDENCY_PARSERS = {
     "package.json": parse_package_json,
     "pyproject.toml": parse_pyproject_toml,
     "Pipfile": parse_requirements_txt,  # close enough format-wise for name extraction
+    "build.gradle": parse_build_gradle,
+    "pom.xml": parse_pom_xml,
 }
 
 
@@ -317,17 +441,31 @@ def extract_package_names(dependency_files: dict) -> set:
 
 # ---------- tech detection + README cross-check ----------
 
-
 def detect_technologies(package_names: set) -> list:
-    """Matches extracted package names against the curated dictionary."""
+    """
+    Matches extracted package names against the curated dictionary.
+    Tries an exact match first; falls back to prefix matching for
+    group-level entries (e.g. dictionary key "androidx.lifecycle" should
+    match an extracted "androidx.lifecycle:lifecycle-viewmodel-ktx", since
+    Android/Java artifact suffixes vary too much to enumerate exactly).
+    """
     detected = []
     seen_display_names = set()
     for pkg in package_names:
-        if pkg in TECH_DICTIONARY:
-            display_name, category = TECH_DICTIONARY[pkg]
-            if (
-                display_name not in seen_display_names
-            ):  # dedupe e.g. langchain-core + langchain-community
+        match = TECH_DICTIONARY.get(pkg)
+        if match is None:
+            for key, value in TECH_DICTIONARY.items():
+                # Group-level dictionary keys (e.g. "androidx.lifecycle", "org.springframework")
+                # should match any artifact under that group (e.g. "androidx.lifecycle:lifecycle-
+                # viewmodel-ktx") — require a "." in the key (so it looks like a Maven/Gradle
+                # group id) and a colon boundary so "androidx.lifecycle" doesn't accidentally
+                # match an unrelated "androidx.lifecycleextra:foo".
+                if "." in key and (pkg == key or pkg.startswith(key + ":")):
+                    match = value
+                    break
+        if match:
+            display_name, category = match
+            if display_name not in seen_display_names:  # dedupe e.g. langchain-core + langchain-community
                 detected.append({"name": display_name, "category": category})
                 seen_display_names.add(display_name)
     return sorted(detected, key=lambda d: (d["category"], d["name"]))
@@ -346,19 +484,14 @@ def find_hidden_tech(detected: list, readme_text: str) -> list:
         name_lower = tech["name"].lower()
         # Check both "sentence transformers" and "sentence-transformers" — READMEs
         # often use the package's hyphenated form while our display names use spaces.
-        variants = {
-            name_lower,
-            name_lower.replace(" ", "-"),
-            name_lower.replace("-", " "),
-        }
+        variants = {name_lower, name_lower.replace(" ", "-"), name_lower.replace("-", " ")}
         if not any(v in readme_lower for v in variants):
             hidden.append(tech)
     return hidden
 
 
-def flag_shared_environment_noise(
-    all_scans: list, noise_threshold: float = 0.5
-) -> None:
+def flag_shared_environment_noise(all_scans: list, noise_threshold: float = 0.5,
+                                    min_sample_size: int = 4) -> None:
     """
     Mutates each scan's detected_stack/hidden_tech entries in place, adding an
     "environment_wide" flag: True if this technology shows up in more than
@@ -373,10 +506,18 @@ def flag_shared_environment_noise(
     choice — and Phase 4 should not confidently claim a project "uses X" on
     that basis alone. Technologies unique to one or two repos are far more
     likely to reflect a real, deliberate choice for that specific project.
+
+    Requires at least `min_sample_size` repos with dependency files before
+    applying this at all. With only 1-2 repos having any manifest, "more than
+    half the repos" is met by definition by anything detected in even a
+    single repo — the heuristic needs enough repos to distinguish a genuine
+    shared-environment pattern from ordinary coincidence, otherwise it
+    wrongly penalizes someone's only real distinctive tech for looking like
+    "the majority" of a too-small sample.
     """
     scans_with_deps = [s for s in all_scans if s["raw_package_count"] > 0]
-    if not scans_with_deps:
-        return
+    if len(scans_with_deps) < min_sample_size:
+        return  # not enough data to distinguish "shared noise" from "just what this repo uses"
 
     tech_repo_count = {}
     for scan in scans_with_deps:
@@ -409,12 +550,8 @@ def scan_repo(repo: dict) -> dict:
 
 # ---------- orchestration ----------
 
-
-def run_phase3(
-    profile_json_path: str,
-    phase2_json_path: Optional[str] = None,
-    output_path: str = "phase3_output.json",
-) -> dict:
+def run_phase3(profile_json_path: str, phase2_json_path: Optional[str] = None,
+               output_path: str = "phase3_output.json") -> dict:
     with open(profile_json_path, "r", encoding="utf-8") as f:
         profile_data = json.load(f)
     repos = {r["name"]: r for r in profile_data["repos"]}
@@ -425,11 +562,7 @@ def run_phase3(
     if phase2_json_path:
         with open(phase2_json_path, "r", encoding="utf-8") as f:
             phase2_data = json.load(f)
-        target_names = (
-            phase2_data.get("featured_repo_names")
-            or phase2_data.get("selected_repo_names")
-            or target_names
-        )
+        target_names = phase2_data.get("featured_repo_names") or phase2_data.get("selected_repo_names") or target_names
         work_experience = phase2_data.get("work_experience") or []
 
     results = []
@@ -445,41 +578,28 @@ def run_phase3(
     results.sort(key=lambda r: target_names.index(r["name"]))
 
     for scan in results:
-        distinctive = [
-            t for t in scan["detected_stack"] if not t.get("environment_wide")
-        ]
+        distinctive = [t for t in scan["detected_stack"] if not t.get("environment_wide")]
         noisy = [t for t in scan["detected_stack"] if t.get("environment_wide")]
 
         print(f"{scan['name']}:")
         if distinctive:
-            print(
-                f"  Distinctive tech (trust these): {', '.join(t['name'] for t in distinctive)}"
-            )
+            print(f"  Distinctive tech (trust these): {', '.join(t['name'] for t in distinctive)}")
         if noisy:
-            print(
-                f"  Also present but common across your repos (verify before claiming): "
-                f"{', '.join(t['name'] for t in noisy)}"
-            )
+            print(f"  Also present but common across your repos (verify before claiming): "
+                  f"{', '.join(t['name'] for t in noisy)}")
         if not scan["detected_stack"]:
             print("  (no dependency files / nothing matched)")
 
-        hidden_distinctive = [
-            t for t in scan["hidden_tech"] if not t.get("environment_wide")
-        ]
+        hidden_distinctive = [t for t in scan["hidden_tech"] if not t.get("environment_wide")]
         if hidden_distinctive:
-            print(
-                f"  -> genuinely hidden (in deps, not in README, and distinctive): "
-                f"{', '.join(t['name'] for t in hidden_distinctive)}"
-            )
+            print(f"  -> genuinely hidden (in deps, not in README, and distinctive): "
+                  f"{', '.join(t['name'] for t in hidden_distinctive)}")
 
     work_experience_stack = scan_work_experience_text(work_experience)
     if work_experience_stack:
         print("\nWork experience:")
         for job_scan in work_experience_stack:
-            tech_names = (
-                ", ".join(t["name"] for t in job_scan["detected_stack"])
-                or "(no known tech phrases detected)"
-            )
+            tech_names = ", ".join(t["name"] for t in job_scan["detected_stack"]) or "(no known tech phrases detected)"
             print(f"  {job_scan['title']} at {job_scan['company']}: {tech_names}")
 
     output = {"repos": results, "work_experience_stack": work_experience_stack}
@@ -491,15 +611,9 @@ def run_phase3(
 
 
 if __name__ == "__main__":
-    profile_path = (
-        sys.argv[1]
-        if len(sys.argv) > 1
-        else input("Path to Phase 1 JSON file: ").strip()
-    )
+    profile_path = sys.argv[1] if len(sys.argv) > 1 else input("Path to Phase 1 JSON file: ").strip()
     phase2_path = sys.argv[2] if len(sys.argv) > 2 else None
     if phase2_path is None:
-        answer = input(
-            "Path to Phase 2 JSON file (Enter to scan all repos instead): "
-        ).strip()
+        answer = input("Path to Phase 2 JSON file (Enter to scan all repos instead): ").strip()
         phase2_path = answer or None
     run_phase3(profile_path, phase2_path)
